@@ -1,0 +1,216 @@
+@import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css');
+@import "tailwindcss";
+
+/* ──────────────────────────────────────────
+   THEME SYSTEM  –  3 palettes × 2 modes
+   Theme is set via data-theme on <html>.
+   Dark mode is set via .dark class on <html>.
+   ────────────────────────────────────────── */
+
+/* ── Indigo / Violet (default) ── */
+@theme {
+  --color-primary: #4F46E5;
+  --color-primary-light: #818CF8;
+  --color-primary-dark: #3730A3;
+  --color-primary-50: #EEF2FF;
+  --color-primary-100: #E0E7FF;
+  --color-primary-500: #6366F1;
+  --color-primary-600: #4F46E5;
+  --color-primary-700: #4338CA;
+
+  --color-surface: #FFFFFF;
+  --color-surface-secondary: #F8FAFC;
+  --color-surface-elevated: #FFFFFF;
+  --color-border: #E2E8F0;
+  --color-border-light: #F1F5F9;
+
+  --color-text-primary: #0F172A;
+  --color-text-secondary: #475569;
+  --color-text-tertiary: #64748B;
+  --color-text-inverse: #FFFFFF;
+
+  --color-income: #10B981;
+  --color-income-light: #D1FAE5;
+  --color-expense: #F43F5E;
+  --color-expense-light: #FFE4E6;
+
+  --color-warning: #F59E0B;
+  --color-info: #3B82F6;
+
+  --color-sidebar-bg: #F8FAFC;
+  --color-sidebar-active: #EEF2FF;
+  --color-sidebar-hover: #F1F5F9;
+  --color-sidebar-text: #64748B;
+  --color-sidebar-text-active: #4F46E5;
+
+  --radius-sm: 0.375rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.75rem;
+  --radius-xl: 1rem;
+  --radius-2xl: 1.25rem;
+}
+
+/* ── Emerald / Teal ── */
+[data-theme="emerald"] {
+  --color-primary: #0D9488;
+  --color-primary-light: #2DD4BF;
+  --color-primary-dark: #0F766E;
+  --color-primary-50: #F0FDFA;
+  --color-primary-100: #CCFBF1;
+  --color-primary-500: #14B8A6;
+  --color-primary-600: #0D9488;
+  --color-primary-700: #0F766E;
+
+  --color-sidebar-active: #F0FDFA;
+  --color-sidebar-text-active: #0D9488;
+}
+
+/* ── Slate / Monotone ── */
+[data-theme="slate"] {
+  --color-primary: #475569;
+  --color-primary-light: #94A3B8;
+  --color-primary-dark: #334155;
+  --color-primary-50: #F8FAFC;
+  --color-primary-100: #F1F5F9;
+  --color-primary-500: #64748B;
+  --color-primary-600: #475569;
+  --color-primary-700: #334155;
+
+  --color-sidebar-active: #F1F5F9;
+  --color-sidebar-text-active: #334155;
+}
+
+/* ── Dark Mode ── */
+.dark {
+  --color-primary: #818CF8;
+  --color-primary-light: #A5B4FC;
+  --color-primary-dark: #6366F1;
+  --color-primary-50: rgba(99,102,241,0.08);
+  --color-primary-100: rgba(99,102,241,0.15);
+  --color-primary-500: #818CF8;
+  --color-primary-600: #818CF8;
+  --color-primary-700: #A5B4FC;
+
+  --color-surface: #0F172A;
+  --color-surface-secondary: #1E293B;
+  --color-surface-elevated: #1E293B;
+  --color-border: #334155;
+  --color-border-light: #1E293B;
+
+  --color-text-primary: #F1F5F9;
+  --color-text-secondary: #CBD5E1;
+  --color-text-tertiary: #94A3B8;
+  --color-text-inverse: #0F172A;
+
+  --color-income: #34D399;
+  --color-income-light: rgba(16,185,129,0.15);
+  --color-expense: #FB7185;
+  --color-expense-light: rgba(244,63,94,0.15);
+
+  --color-warning: #FBBF24;
+  --color-info: #60A5FA;
+
+  --color-sidebar-bg: #1E293B;
+  --color-sidebar-active: rgba(99,102,241,0.15);
+  --color-sidebar-hover: rgba(148,163,184,0.08);
+  --color-sidebar-text: #94A3B8;
+  --color-sidebar-text-active: #818CF8;
+}
+
+.dark[data-theme="emerald"] {
+  --color-primary: #2DD4BF;
+  --color-primary-light: #5EEAD4;
+  --color-primary-dark: #14B8A6;
+  --color-primary-50: rgba(13,148,136,0.08);
+  --color-primary-100: rgba(13,148,136,0.15);
+  --color-primary-500: #2DD4BF;
+  --color-primary-600: #2DD4BF;
+  --color-primary-700: #5EEAD4;
+
+  --color-sidebar-active: rgba(13,148,136,0.15);
+  --color-sidebar-text-active: #2DD4BF;
+}
+
+.dark[data-theme="slate"] {
+  --color-primary: #CBD5E1;
+  --color-primary-light: #E2E8F0;
+  --color-primary-dark: #94A3B8;
+  --color-primary-50: rgba(148,163,184,0.08);
+  --color-primary-100: rgba(148,163,184,0.15);
+  --color-primary-500: #CBD5E1;
+  --color-primary-600: #CBD5E1;
+  --color-primary-700: #E2E8F0;
+
+  --color-sidebar-active: rgba(148,163,184,0.12);
+  --color-sidebar-text-active: #E2E8F0;
+}
+
+/* ──────────────────────────────────────────
+   GLOBAL BASE STYLES
+   ────────────────────────────────────────── */
+
+html {
+  font-family: 'Pretendard Variable', 'Pretendard', 'Inter', system-ui, -apple-system, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--color-surface-secondary);
+  color: var(--color-text-primary);
+  font-size: 14px;
+  line-height: 1.6;
+  letter-spacing: -0.01em;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+/* Focus ring utility */
+*:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
+
+/* Smoother transitions for interactive elements */
+button, a, input, select, textarea {
+  transition: all 0.15s ease;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: var(--color-border);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: var(--color-text-tertiary);
+}
+
+/* Selection */
+::selection {
+  background-color: var(--color-primary-100);
+  color: var(--color-text-primary);
+}
+
+/* Number font feature for tabular numbers */
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+}
+
+/* iOS Safari date input fix */
+input[type="date"] {
+  -webkit-appearance: none;
+  appearance: none;
+  max-width: 100%;
+  box-sizing: border-box;
+}

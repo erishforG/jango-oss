@@ -1,0 +1,21 @@
+spring:
+  cloud:
+    gcp:
+      sql:
+        enabled: false
+
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:jdbc:tc:postgresql:16:///testdb}
+    driver-class-name: ${SPRING_DATASOURCE_DRIVER_CLASS_NAME:org.testcontainers.jdbc.ContainerDatabaseDriver}
+
+  flyway:
+    enabled: true
+
+  jpa:
+    hibernate:
+      ddl-auto: validate
+
+  autoconfigure:
+    exclude:
+      - org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration
+      - org.springframework.boot.autoconfigure.data.redis.RedisRepositoriesAutoConfiguration

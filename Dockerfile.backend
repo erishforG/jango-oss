@@ -1,0 +1,47 @@
+## Stage 1: Build frontend (React → static assets bundled into backend jar)
+FROM node:22-alpine AS web
+ARG VITE_GOOGLE_CLIENT_ID=""
+ARG VITE_ADMIN_SECRET=""
+ARG VITE_FIREBASE_AUTH_DOMAIN=""
+ARG VITE_API_BASE_URL=""
+ARG VITE_SENTRY_DSN=""
+ARG VITE_APP_ENV="production"
+ARG VITE_RELEASE=""
+ENV VITE_GOOGLE_CLIENT_ID=$VITE_GOOGLE_CLIENT_ID
+ENV VITE_ADMIN_SECRET=$VITE_ADMIN_SECRET
+ENV VITE_FIREBASE_AUTH_DOMAIN=$VITE_FIREBASE_AUTH_DOMAIN
+ENV VITE_API_BASE_URL=$VITE_API_BASE_URL
+ENV VITE_SENTRY_DSN=$VITE_SENTRY_DSN
+ENV VITE_APP_ENV=$VITE_APP_ENV
+ENV VITE_RELEASE=$VITE_RELEASE
+WORKDIR /web
+COPY jango-web/package.json jango-web/package-lock.json ./
+RUN npm ci
+COPY jango-web/ ./
+RUN npm run build
+
+## Stage 2: Build backend (with SPA assets embedded under classpath:/static/)
+FROM eclipse-temurin:21-jdk-alpine AS build
+WORKDIR /app
+COPY gradle gradle
+COPY gradlew build.gradle.kts settings.gradle.kts gradle.properties ./
+COPY jango-common/build.gradle.kts jango-common/
+COPY jango-core/build.gradle.kts jango-core/
+COPY jango-api/build.gradle.kts jango-api/
+COPY jango-admin/build.gradle.kts jango-admin/
+RUN chmod +x gradlew && ./gradlew dependencies --no-daemon || true
+COPY jango-common jango-common
+COPY jango-core jango-core
+COPY jango-api jango-api
+# Embed frontend dist into Spring Boot static resources (consolidated SPA serving)
+COPY --from=web /web/dist /app/jango-api/src/main/resources/static
+RUN ./gradlew :jango-api:bootJar --no-daemon -x test
+
+## Stage 3: Runtime
+FROM eclipse-temurin:21-jre-alpine
+WORKDIR /app
+RUN addgroup -S app && adduser -S app -G app
+USER app
+COPY --from=build /app/jango-api/build/libs/*.jar app.jar
+EXPOSE 8080
+ENTRYPOINT ["java", "-jar", "app.jar"]

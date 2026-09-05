@@ -1,0 +1,102 @@
+openapi: 3.0.3
+info:
+  title: Jango Admin Webhook Ingestions API
+  version: 1.0.0
+paths:
+  /api/admin/webhooks/ingestions:
+    get:
+      summary: List webhook ingestion records
+      parameters:
+        - in: query
+          name: status
+          schema:
+            type: string
+            enum: [RECEIVED, REPROCESSING, APPLIED, DISCARDED]
+        - in: query
+          name: dateFrom
+          schema:
+            type: string
+            format: date
+        - in: query
+          name: dateTo
+          schema:
+            type: string
+            format: date
+        - in: query
+          name: keyword
+          schema:
+            type: string
+        - in: query
+          name: page
+          schema:
+            type: integer
+            minimum: 0
+        - in: query
+          name: size
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+      responses:
+        '200':
+          description: Success
+  /api/admin/webhooks/ingestions/{id}:
+    get:
+      summary: Get a single ingestion record
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Success
+        '404':
+          description: Not found
+  /api/admin/webhooks/ingestions/{id}/reprocess:
+    post:
+      summary: Reprocess a single ingestion record
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - in: header
+          name: X-Idempotency-Key
+          schema:
+            type: string
+            maxLength: 128
+      responses:
+        '200':
+          description: Success
+        '409':
+          description: Reprocess conflict (REPROCESS_CONFLICT)
+  /api/admin/webhooks/ingestions/reprocess-bulk:
+    post:
+      summary: Reprocess multiple ingestion records
+      parameters:
+        - in: header
+          name: X-Idempotency-Key
+          schema:
+            type: string
+            maxLength: 128
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [ids]
+              properties:
+                ids:
+                  type: array
+                  items:
+                    type: integer
+                    format: int64
+      responses:
+        '200':
+          description: Success

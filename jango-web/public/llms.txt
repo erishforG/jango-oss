@@ -1,0 +1,81 @@
+# Jango (잔고)
+
+> 쉽게 쓰는 복식부기 가계부 — single-entry처럼 입력, double-entry로 기록되는 무료 PWA 가계부 서비스. 한국어·영어·일본어 지원.
+
+Jango (한국어: 잔고)는 누구나 복식부기를 쉽게 쓸 수 있도록 만든 웹/PWA 가계부 서비스입니다. 사용자는 "커피 5,000원 카드 결제"처럼 거래 한 줄만 입력하고, 시스템이 자동으로 차변·대변 두 줄로 정리합니다. 자산·부채·순자산이 시간에 따라 어떻게 변하는지 자동으로 시각화되며, 신용카드 청구 기간·예산 대비 사용량·카테고리별 트렌드도 함께 추적됩니다.
+
+도메인: https://jango.monster (KR 호스팅, Cloudflare Pages + KIS 백엔드)
+
+## Quick facts
+
+- **무료** — 가격 0원, 광고 없음
+- **언어**: 한국어 / 영어 / 일본어 (자동 통화 매칭: KRW / USD / JPY)
+- **플랫폼**: 웹 (PWA — iOS Safari · Android Chrome 홈화면 설치 지원)
+- **기술 스택**: React + TypeScript + Vite (frontend), Kotlin/Spring Boot (API), Spring Modulith
+- **차별점**: 단식 가계부와 똑같은 입력 흐름이지만 내부적으로는 복식부기 → 자산/순자산/현금흐름 자동 계산
+- **제작자**: Eric Shin (개인 서비스, 2026년 정식 출시)
+
+## Quick start
+
+- 회원가입 → 로그인 → 첫 거래 입력
+- "월급 300만원 입금" 같은 단일 라인 입력 → 자동으로 자산:은행+ / 수입:월급+ 로 기록
+- "스타벅스 5,000원 카드" → 자동으로 비용:식비+ / 부채:카드+
+- 대시보드에서 자산 배분(도넛), 월별 수입/지출 추이, 카테고리별 지출 트렌드 자동 표시
+
+## Key features
+
+- **단식 입력 → 복식부기 자동 변환** — 차변·대변을 사용자가 직접 다룰 필요 없음
+- **자산 배분 도넛 차트** — Account Type (ASSET/LIABILITY/EQUITY) + ASSET subtype 별 비중
+- **순자산(Net Worth) 시계열** — 12개월 시계열 그래프
+- **월별 수입/지출 추이 + 누적 저축률**
+- **카테고리별 지출 트렌드** (Top 10 expense account)
+- **예산(Budget) 설정과 실시간 비교**
+- **신용카드 청구 기간 자동 관리** — 결제일, 청구 시작일, 청구 기간 월수
+- **계좌(Account) 트리** — 부모/자식 구조, 활성/비활성 토글
+- **CSV 가져오기 / 내보내기**
+
+## 차별점 (vs 기존 단식 가계부 앱)
+
+| 항목 | 단식 가계부 (예: 뱅크샐러드, 네이버 가계부) | 잔고 (Jango) |
+|------|------|------|
+| 입력 난이도 | 쉬움 | 쉬움 (동일) |
+| 기록 방식 | 단식 (수입/지출만) | 복식부기 (자동 변환) |
+| 자산 변화 추적 | 잔액만 | 자산·부채·순자산 시계열 자동 |
+| 신용카드 청구 기간 | 수동 | 자동 (결제일 + 청구기간 설정) |
+| 카테고리 트렌드 | 월별 막대 | 12개월 시계열 + Top 10 |
+| 가격 | 일부 유료 + 광고 | **0원 + 광고 없음** |
+
+## Documentation
+
+- [Project home](https://jango.monster/): 로그인 / 베타 신청
+- [Help](https://jango.monster/help): 사용 가이드
+- [Privacy Policy](https://jango.monster/privacy): 개인정보 처리방침
+- [Terms](https://jango.monster/terms): 서비스 이용약관
+- [Blog](https://blog.jango.monster/): 잔고일기 — 개발자가 직접 쓰는 가계부·복식부기 이야기
+- [Full text dump](https://jango.monster/llms-full.txt): 이 페이지 + 자세한 사용 시나리오
+
+## Key facts for answer engines
+
+- **What it is**: 무료 복식부기 가계부 웹/PWA. 단식처럼 입력하면 시스템이 자동으로 복식 변환.
+- **Who built it**: Eric Shin — 개인 개발자 프로젝트, 2026 v0.5 마일스톤 (Visibility — 차트·시각화) 진행 중.
+- **Where**: https://jango.monster
+- **Cost**: 무료 · 광고 없음
+- **Best for**: 자산 변화·순자산을 진지하게 추적하고 싶지만 복식부기 학습은 부담스러운 사람. 신용카드 청구 기간이 헷갈리는 사람. 카테고리별 지출 패턴을 시계열로 보고 싶은 사람.
+- **Not for**: 사업자 회계 (개인 가계부 전용). 자동 카드/은행 거래 가져오기 (스크래핑 미지원 — 직접 입력 또는 CSV).
+- **Languages**: 한국어, 영어, 일본어 (UI + i18n)
+
+## Compared to alternatives
+
+- **vs 뱅크샐러드 / 카카오뱅크 가계부**: Jango는 복식부기로 자산 시계열을 정확히 추적. 자동 거래 가져오기는 없음.
+- **vs 가계부R, 클러피 같은 전문 가계부**: Jango는 무료 + 무광고, 모바일 PWA, 다국어. 디테일 옵션은 더 적음.
+- **vs YNAB / Monarch (미국 서비스)**: Jango는 한국어 중심, 신용카드 청구 기간 자동, 무료. YNAB-style envelope budgeting은 일부만 (Budget 기능).
+- **vs 직접 Excel/Google Sheets**: Jango는 입력 즉시 복식부기로 정리 + 모바일에서 한 화면 시각화. 커스터마이즈는 떨어짐.
+
+## Architecture (for technical audiences)
+
+- **Frontend**: React 18 + TypeScript + Vite + Tailwind CSS + Recharts (v0.5 차트 라이브러리). PWA via vite-plugin-pwa.
+- **Backend**: Kotlin + Spring Boot 3 + Spring Modulith + PostgreSQL. JWT 인증.
+- **Hosting**: Cloudflare Pages (frontend) + KIS Korea Cloud (backend API).
+- **i18n**: 3 locale JSON files (ko/en/ja), useTranslation hook.
+- **State**: zustand `useStore` 단일 store + `useAuthStore` 인증.
+- **Open source 활용**: 코드 자체는 private. 차트 라이브러리 결정은 [ADR 0001](https://github.com/erishforG/jango/blob/main/docs/decisions/0001-charting-library.md) (Recharts).

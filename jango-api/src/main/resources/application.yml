@@ -1,0 +1,79 @@
+spring:
+  application:
+    name: jango-api
+
+  mail:
+    host: ${MAIL_SMTP_HOST:}
+    port: ${MAIL_SMTP_PORT:587}
+    username: ${MAIL_SMTP_USERNAME:}
+    password: ${MAIL_SMTP_PASSWORD:}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+        from: ${MAIL_FROM:noreply@getjango.com}
+
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
+
+  datasource:
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/jango}
+    username: ${DB_USERNAME:jango}
+    password: ${DB_PASSWORD:jango}
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      maximum-pool-size: 5
+      minimum-idle: 2
+      connection-timeout: 30000
+      idle-timeout: 600000
+      max-lifetime: 1800000
+
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    open-in-view: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        jdbc:
+          batch_size: 50
+        order_inserts: true
+        order_updates: true
+
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+
+server:
+  port: ${PORT:8080}
+
+google:
+  client-id: ${GOOGLE_CLIENT_ID:placeholder-client-id}
+
+admin:
+  secret: ${ADMIN_SECRET:}
+
+internal:
+  jobs:
+    secret: ${INTERNAL_JOBS_SECRET:}
+    allowlist: ${INTERNAL_JOBS_ALLOWLIST:}
+
+monthly-report:
+  admin-only: ${MONTHLY_REPORT_ADMIN_ONLY:true}
+  admin-allowlist: ${MONTHLY_REPORT_ADMIN_ALLOWLIST:}
+  email-enabled: ${MONTHLY_REPORT_EMAIL_ENABLED:true}
+  resend:
+    max-batch-size: ${MONTHLY_REPORT_RESEND_MAX_BATCH_SIZE:100}
+    min-interval-seconds: ${MONTHLY_REPORT_RESEND_MIN_INTERVAL_SECONDS:30}
+
+springdoc:
+  api-docs:
+    path: /api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+    tags-sorter: alpha
+    operations-sorter: alpha

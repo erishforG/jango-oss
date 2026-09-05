@@ -1,0 +1,12 @@
+/** Splits `items` into consecutive groups of at most `size` elements each. */
+export function chunk<T>(items: T[], size: number): T[][] {
+  if (size <= 0) {
+    throw new Error(`chunk size must be positive, got ${size}`);
+  }
+
+  const chunks: T[][] = [];
+  for (let i = 0; i < items.length; i += size) {
+    chunks.push(items.slice(i, i + size));
+  }
+  return chunks;
+}

@@ -1,0 +1,107 @@
+[
+  {
+    "id": "t1", "date": "2026-02-18", "description": "스타벅스 아메리카노",
+    "entries": [
+      { "id": "e1", "accountId": "a4-8", "accountName": "카페/간식", "type": "DR", "amount": 4500 },
+      { "id": "e2", "accountId": "a2-1", "accountName": "신한카드", "type": "CR", "amount": 4500 }
+    ], "category": "카페/간식"
+  },
+  {
+    "id": "t2", "date": "2026-02-18", "description": "점심 김치찌개",
+    "entries": [
+      { "id": "e3", "accountId": "a4-1", "accountName": "식비", "type": "DR", "amount": 9000 },
+      { "id": "e4", "accountId": "a2-1", "accountName": "신한카드", "type": "CR", "amount": 9000 }
+    ], "category": "식비"
+  },
+  {
+    "id": "t3", "date": "2026-02-17", "description": "지하철 교통카드 충전",
+    "entries": [
+      { "id": "e5", "accountId": "a4-2", "accountName": "교통비", "type": "DR", "amount": 50000 },
+      { "id": "e6", "accountId": "a1-2", "accountName": "카카오뱅크", "type": "CR", "amount": 50000 }
+    ], "category": "교통비"
+  },
+  {
+    "id": "t4", "date": "2026-02-17", "description": "넷플릭스 구독",
+    "entries": [
+      { "id": "e7", "accountId": "a4-6", "accountName": "문화생활", "type": "DR", "amount": 17000 },
+      { "id": "e8", "accountId": "a2-2", "accountName": "삼성카드", "type": "CR", "amount": 17000 }
+    ], "category": "문화생활"
+  },
+  {
+    "id": "t5", "date": "2026-02-16", "description": "월급",
+    "entries": [
+      { "id": "e9", "accountId": "a1-1", "accountName": "신한은행", "type": "DR", "amount": 4500000 },
+      { "id": "e10", "accountId": "a3-1", "accountName": "급여", "type": "CR", "amount": 4500000 }
+    ], "category": "급여"
+  },
+  {
+    "id": "t6", "date": "2026-02-15", "description": "편의점 간식",
+    "entries": [
+      { "id": "e11", "accountId": "a4-8", "accountName": "카페/간식", "type": "DR", "amount": 3200 },
+      { "id": "e12", "accountId": "a1-4", "accountName": "현금", "type": "CR", "amount": 3200 }
+    ], "category": "카페/간식"
+  },
+  {
+    "id": "t7", "date": "2026-02-15", "description": "월세",
+    "entries": [
+      { "id": "e13", "accountId": "a4-3", "accountName": "주거비", "type": "DR", "amount": 850000 },
+      { "id": "e14", "accountId": "a1-1", "accountName": "신한은행", "type": "CR", "amount": 850000 }
+    ], "category": "주거비"
+  },
+  {
+    "id": "t8", "date": "2026-02-14", "description": "발렌타인 선물",
+    "entries": [
+      { "id": "e15", "accountId": "a4-10", "accountName": "경조사", "type": "DR", "amount": 65000 },
+      { "id": "e16", "accountId": "a2-1", "accountName": "신한카드", "type": "CR", "amount": 65000 }
+    ], "category": "경조사"
+  },
+  {
+    "id": "t9", "date": "2026-02-13", "description": "다이소 생활용품",
+    "entries": [
+      { "id": "e17", "accountId": "a4-9", "accountName": "생활용품", "type": "DR", "amount": 15000 },
+      { "id": "e18", "accountId": "a1-4", "accountName": "현금", "type": "CR", "amount": 15000 }
+    ], "category": "생활용품"
+  },
+  {
+    "id": "t10", "date": "2026-02-12", "description": "SK 통신비",
+    "entries": [
+      { "id": "e19", "accountId": "a4-4", "accountName": "통신비", "type": "DR", "amount": 65000 },
+      { "id": "e20", "accountId": "a1-1", "accountName": "신한은행", "type": "CR", "amount": 65000 }
+    ], "category": "통신비"
+  },
+  {
+    "id": "t11", "date": "2026-02-11", "description": "유니클로 히트텍",
+    "entries": [
+      { "id": "e21", "accountId": "a4-5", "accountName": "의류", "type": "DR", "amount": 49000 },
+      { "id": "e22", "accountId": "a2-2", "accountName": "삼성카드", "type": "CR", "amount": 49000 }
+    ], "category": "의류"
+  },
+  {
+    "id": "t12", "date": "2026-02-10", "description": "이비인후과 진료",
+    "entries": [
+      { "id": "e23", "accountId": "a4-7", "accountName": "의료비", "type": "DR", "amount": 15000 },
+      { "id": "e24", "accountId": "a2-1", "accountName": "신한카드", "type": "CR", "amount": 15000 }
+    ], "category": "의료비"
+  },
+  {
+    "id": "t13", "date": "2026-02-10", "description": "삼성생명 보험료",
+    "entries": [
+      { "id": "e25", "accountId": "a4-11", "accountName": "보험료", "type": "DR", "amount": 215000 },
+      { "id": "e26", "accountId": "a1-1", "accountName": "신한은행", "type": "CR", "amount": 215000 }
+    ], "category": "보험료"
+  },
+  {
+    "id": "t14", "date": "2026-02-08", "description": "마트 장보기",
+    "entries": [
+      { "id": "e27", "accountId": "a4-1", "accountName": "식비", "type": "DR", "amount": 87000 },
+      { "id": "e28", "accountId": "a2-1", "accountName": "신한카드", "type": "CR", "amount": 87000 }
+    ], "category": "식비"
+  },
+  {
+    "id": "t15", "date": "2026-02-05", "description": "학자금대출 상환",
+    "entries": [
+      { "id": "e29", "accountId": "a2-3", "accountName": "학자금대출", "type": "DR", "amount": 300000 },
+      { "id": "e30", "accountId": "a1-1", "accountName": "신한은행", "type": "CR", "amount": 300000 }
+    ], "category": "대출상환"
+  }
+]

@@ -1,0 +1,2 @@
+ALTER TABLE accounts
+    ADD COLUMN IF NOT EXISTS icon_emoji VARCHAR(64) NULL;

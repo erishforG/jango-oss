@@ -1,0 +1,147 @@
+name: CI
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  changes:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: read
+    outputs:
+      web: ${{ steps.filter.outputs.web }}
+      backend: ${{ steps.filter.outputs.backend }}
+      admin: ${{ steps.filter.outputs.admin }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            web:
+              - 'jango-web/**'
+              - 'Dockerfile.web'
+            backend:
+              - 'jango-api/**'
+              - 'jango-core/**'
+              - 'jango-common/**'
+              - 'Dockerfile.backend'
+            admin:
+              - 'jango-admin/**'
+              - 'Dockerfile.admin'
+
+  web:
+    needs: changes
+    if: needs.changes.outputs.web == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: jango-web/package-lock.json
+
+      - name: Install deps
+        working-directory: jango-web
+        run: npm ci
+
+      - name: Build web
+        working-directory: jango-web
+        run: npm run build
+
+  backend:
+    needs: changes
+    if: needs.changes.outputs.backend == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - uses: gradle/actions/setup-gradle@v4
+
+      - name: Verify Docker for Testcontainers
+        run: |
+          echo "DOCKER_HOST=$DOCKER_HOST"
+          for i in {1..12}; do
+            if docker info >/dev/null 2>&1; then
+              echo "Docker ready"
+              docker version
+              docker info
+              exit 0
+            fi
+            echo "Docker not ready yet... ($i/12)"
+            sleep 5
+          done
+          echo "Docker not available after wait"
+          docker info
+
+      - name: Ktlint (backend modules)
+        run: ./gradlew :jango-common:ktlintCheck :jango-core:ktlintCheck :jango-api:ktlintCheck
+
+      - name: Build & Test (backend modules)
+        run: ./gradlew :jango-common:build :jango-core:build :jango-api:build --stacktrace
+
+      - name: Reconcile CSV fixture
+        run: |
+          node tools/reconcile-csv.mjs tools/fixtures/whooing-sample.csv tools/fixtures/jango-sample.csv /tmp/reconcile.json
+          node -e "const fs=require('fs'); const r=JSON.parse(fs.readFileSync('/tmp/reconcile.json','utf8')); if(r.diffAccountCount!==0){console.error(r); process.exit(1);} console.log('reconcile fixture ok');"
+
+      - name: Safety check (production guard)
+        run: bash tools/safety-check.sh "${{ github.ref_name }}"
+
+  admin:
+    needs: changes
+    if: needs.changes.outputs.admin == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+
+      - uses: gradle/actions/setup-gradle@v4
+
+      - name: Verify Docker for Testcontainers
+        run: |
+          echo "DOCKER_HOST=$DOCKER_HOST"
+          for i in {1..12}; do
+            if docker info >/dev/null 2>&1; then
+              echo "Docker ready"
+              docker version
+              docker info
+              exit 0
+            fi
+            echo "Docker not ready yet... ($i/12)"
+            sleep 5
+          done
+          echo "Docker not available after wait"
+          docker info
+
+      - name: Ktlint (admin)
+        run: ./gradlew :jango-admin:ktlintCheck
+
+      - name: Build & Test (admin)
+        run: ./gradlew :jango-admin:build --stacktrace

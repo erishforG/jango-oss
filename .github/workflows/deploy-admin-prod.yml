@@ -1,0 +1,55 @@
+name: Deploy Admin to Cloud Run (Production)
+
+on:
+  push:
+    tags: ['v*']
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+  PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
+  REGION: ${{ secrets.GCP_REGION }}
+  SERVICE: jango-admin
+  REGISTRY: ${{ secrets.GCP_REGION }}-docker.pkg.dev
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - id: auth
+        uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: ${{ secrets.GCP_WIF_PROVIDER }}
+          service_account: ${{ secrets.GCP_SA_EMAIL }}
+
+      - uses: google-github-actions/setup-gcloud@v2
+
+      - name: Configure Docker
+        run: gcloud auth configure-docker ${{ env.REGISTRY }} --quiet
+
+      - name: Build & Push
+        run: |
+          IMAGE=${{ env.REGISTRY }}/${{ env.PROJECT_ID }}/cloud-run/${{ env.SERVICE }}:${{ github.ref_name }}
+          docker build -t $IMAGE -f Dockerfile.admin .
+          docker push $IMAGE
+          echo "IMAGE=$IMAGE" >> $GITHUB_ENV
+
+      - name: Deploy to Cloud Run
+        run: |
+          gcloud run deploy ${{ env.SERVICE }} \
+            --image ${{ env.IMAGE }} \
+            --project ${{ env.PROJECT_ID }} \
+            --region ${{ env.REGION }} \
+            --platform managed \
+            --allow-unauthenticated \
+            --memory 1Gi \
+            --min-instances 0 \
+            --max-instances 1 \
+            --no-cpu-boost \
+            --timeout 600 \
+            --set-env-vars "^|^SPRING_PROFILES_ACTIVE=prod|SPRING_FLYWAY_ENABLED=false|DB_URL=${{ secrets.DB_URL }}|DB_USERNAME=${{ secrets.DB_USERNAME }}|DB_PASSWORD=${{ secrets.DB_PASSWORD }}|SPRING_CLOUD_GCP_SQL_ENABLED=false|SPRING_AUTOCONFIGURE_EXCLUDE=com.google.cloud.spring.autoconfigure.sql.GcpCloudSqlAutoConfiguration|SPRING_DATASOURCE_HIKARI_MAXIMUM_POOL_SIZE=2|SPRING_DATASOURCE_HIKARI_MINIMUM_IDLE=0|SPRING_DATASOURCE_HIKARI_CONNECTION_TIMEOUT=10000|SPRING_DATASOURCE_HIKARI_IDLE_TIMEOUT=60000|SPRING_DATASOURCE_HIKARI_MAX_LIFETIME=180000|JAVA_TOOL_OPTIONS=-XX:MaxRAMPercentage=70.0"

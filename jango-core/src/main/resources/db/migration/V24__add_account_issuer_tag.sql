@@ -1,0 +1,2 @@
+ALTER TABLE accounts
+    ADD COLUMN IF NOT EXISTS issuer_tag VARCHAR(32);

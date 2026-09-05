@@ -1,0 +1,263 @@
+openapi: 3.0.3
+info:
+  title: Jango Admin API
+  version: 0.1.0
+paths:
+  /api/admin/me:
+    get:
+      tags: [Admin]
+      summary: Get admin context
+      parameters:
+        - in: header
+          name: X-Admin-Secret
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Admin context
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  role:
+                    type: string
+                    example: admin
+                  authMethod:
+                    type: string
+                    example: X-Admin-Secret
+                  permissions:
+                    type: array
+                    items:
+                      type: string
+        '401':
+          description: Invalid or missing admin secret
+  /api/admin/stats/overview:
+    get:
+      tags: [Admin]
+      summary: Get admin overview metrics
+      description: Returns overview metrics. Defaults to last 7 days when from/to are omitted.
+      parameters:
+        - in: header
+          name: X-Admin-Secret
+          required: true
+          schema:
+            type: string
+        - in: query
+          name: from
+          required: false
+          schema:
+            type: string
+            format: date
+        - in: query
+          name: to
+          required: false
+          schema:
+            type: string
+            format: date
+      responses:
+        '200':
+          description: Overview response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  from:
+                    type: string
+                    format: date
+                  to:
+                    type: string
+                    format: date
+                  users:
+                    type: object
+                    properties:
+                      dau: { type: integer, format: int64 }
+                      wau: { type: integer, format: int64 }
+                      newUsers: { type: integer, format: int64 }
+                      activeLedgers: { type: integer, format: int64 }
+                  webhooks:
+                    type: object
+                    properties:
+                      total: { type: integer, format: int64 }
+                      successRate: { type: number, format: double }
+                      avgLatencyMs: { type: integer, format: int64 }
+                  rules:
+                    type: object
+                    description: Placeholder metrics when rule data source is unavailable.
+                    properties:
+                      totalRules: { type: integer, format: int64, example: 0 }
+                      triggeredRules: { type: integer, format: int64, example: 0 }
+                      automatedActions: { type: integer, format: int64, example: 0 }
+                      dataSource: { type: string, example: placeholder }
+                      note: { type: string }
+
+  /api/admin/rules:
+    get:
+      tags: [Admin Rules]
+      summary: List admin rules
+      parameters:
+        - in: header
+          name: X-Admin-Secret
+          required: true
+          schema: { type: string }
+        - in: query
+          name: status
+          required: false
+          schema:
+            type: string
+            enum: [DRAFT, ACTIVE, DEPRECATED]
+        - in: query
+          name: q
+          required: false
+          schema: { type: string }
+      responses:
+        '200':
+          description: Rule list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AdminRule'
+    post:
+      tags: [Admin Rules]
+      summary: Create admin rule
+      parameters:
+        - in: header
+          name: X-Admin-Secret
+          required: true
+          schema: { type: string }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateAdminRuleRequest'
+      responses:
+        '200':
+          description: Created rule (manual-first, status=DRAFT)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AdminRule'
+
+  /api/admin/rules/{id}:
+    patch:
+      tags: [Admin Rules]
+      summary: Patch admin rule
+      parameters:
+        - in: header
+          name: X-Admin-Secret
+          required: true
+          schema: { type: string }
+        - in: path
+          name: id
+          required: true
+          schema: { type: integer, format: int64 }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchAdminRuleRequest'
+      responses:
+        '200':
+          description: Updated rule
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AdminRule'
+
+  /api/admin/rules/{id}/activate:
+    post:
+      tags: [Admin Rules]
+      summary: Activate admin rule manually
+      parameters:
+        - in: header
+          name: X-Admin-Secret
+          required: true
+          schema: { type: string }
+        - in: path
+          name: id
+          required: true
+          schema: { type: integer, format: int64 }
+      responses:
+        '200':
+          description: Activated rule
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AdminRule'
+
+  /api/admin/rules/{id}/deprecate:
+    post:
+      tags: [Admin Rules]
+      summary: Deprecate admin rule manually
+      parameters:
+        - in: header
+          name: X-Admin-Secret
+          required: true
+          schema: { type: string }
+        - in: path
+          name: id
+          required: true
+          schema: { type: integer, format: int64 }
+      responses:
+        '200':
+          description: Deprecated rule
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AdminRule'
+
+components:
+  schemas:
+    AdminRule:
+      type: object
+      properties:
+        id: { type: integer, format: int64 }
+        name: { type: string }
+        description: { type: string, nullable: true }
+        scope:
+          type: string
+          enum: [CARD_ISSUER]
+        issuer:
+          type: string
+          description: Domestic card issuer code/name scope target
+          example: SHINHAN
+        conditionJson: { type: string }
+        actionJson: { type: string }
+        status:
+          type: string
+          enum: [DRAFT, ACTIVE, DEPRECATED]
+        activatedAt: { type: string, nullable: true, format: date-time }
+        deprecatedAt: { type: string, nullable: true, format: date-time }
+        createdAt: { type: string, format: date-time }
+        updatedAt: { type: string, format: date-time }
+
+    CreateAdminRuleRequest:
+      type: object
+      required: [name, scope, issuer, conditionJson, actionJson]
+      properties:
+        name: { type: string }
+        description: { type: string }
+        scope:
+          type: string
+          enum: [CARD_ISSUER]
+          default: CARD_ISSUER
+        issuer:
+          type: string
+          description: Domestic card issuer scope value
+        conditionJson: { type: string }
+        actionJson: { type: string }
+
+    PatchAdminRuleRequest:
+      type: object
+      properties:
+        name: { type: string }
+        description: { type: string }
+        issuer: { type: string }
+        conditionJson: { type: string }
+        actionJson: { type: string }

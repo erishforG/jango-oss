@@ -1,0 +1,15 @@
+spring:
+  cloud:
+    gcp:
+      sql:
+        enabled: true
+        instance-connection-name: ${SPRING_CLOUD_GCP_SQL_INSTANCE_CONNECTION_NAME:your-gcp-project:asia-northeast3:jango-db}
+        database-name: ${SPRING_CLOUD_GCP_SQL_DATABASE_NAME:jango_production}
+  datasource:
+    username: ${DB_USERNAME:postgres}
+    password: ${DB_PASSWORD:}
+
+logging:
+  level:
+    root: WARN
+    com.jango: INFO

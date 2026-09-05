@@ -1,0 +1,26 @@
+{
+  "monthlyIncome": 4800000,
+  "monthlyExpense": 2870000,
+  "netWorth": 36730000,
+  "netWorthTrend": [
+    { "month": "2025-09", "income": 4600000, "expense": 2950000, "netWorth": 32100000 },
+    { "month": "2025-10", "income": 4650000, "expense": 2800000, "netWorth": 33200000 },
+    { "month": "2025-11", "income": 4700000, "expense": 3100000, "netWorth": 33850000 },
+    { "month": "2025-12", "income": 5200000, "expense": 3800000, "netWorth": 34500000 },
+    { "month": "2026-01", "income": 4750000, "expense": 2700000, "netWorth": 35800000 },
+    { "month": "2026-02", "income": 4800000, "expense": 2870000, "netWorth": 36730000 }
+  ],
+  "categorySpending": [
+    { "name": "주거비", "amount": 850000, "color": "#6366F1" },
+    { "name": "식비", "amount": 680000, "color": "#EF4444" },
+    { "name": "의류", "amount": 230000, "color": "#F59E0B" },
+    { "name": "보험료", "amount": 215000, "color": "#10B981" },
+    { "name": "경조사", "amount": 200000, "color": "#8B5CF6" },
+    { "name": "문화생활", "amount": 180000, "color": "#EC4899" },
+    { "name": "교통비", "amount": 150000, "color": "#06B6D4" },
+    { "name": "카페/간식", "amount": 120000, "color": "#84CC16" },
+    { "name": "의료비", "amount": 95000, "color": "#F97316" },
+    { "name": "생활용품", "amount": 85000, "color": "#14B8A6" },
+    { "name": "통신비", "amount": 65000, "color": "#A855F7" }
+  ]
+}
