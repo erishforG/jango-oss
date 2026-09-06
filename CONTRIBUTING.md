@@ -1,46 +1,46 @@
-# CONTRIBUTING.md - Jango 개발 가이드
+# CONTRIBUTING.md - Jango Development Guide
 
-## 브랜치 규칙
-- **main 직접 푸시 금지** — PR만 허용
-- **develop** — 개발 통합 브랜치 (자동 배포 없음; 로컬 검증 후 태그)
-- 기능 브랜치: `fix/{issue}-{description}` 또는 `feat/{issue}-{description}`
-- PR 생성 후 메인테이너 리뷰 → 머지
+## Branch rules
+- **No direct pushes to main** — PRs only
+- **develop** — integration branch (no auto-deploy; tag after local verification)
+- Feature branches: `fix/{issue}-{description}` or `feat/{issue}-{description}`
+- Open a PR → maintainer review → merge
 
-## Ktlint 코드 스타일
+## Ktlint code style
 
-### 1. 체인 메서드 (chain-method-continuation)
+### 1. Chain method continuation
 ```kotlin
-// ✅ 올바른 방식: 변수 다음 줄에 .메서드()
+// ✅ Correct: break the line after the variable, then .method()
 fun example(http: HttpSecurity): SecurityFilterChain =
     http
         .csrf { it.disable() }
         .sessionManagement {
             it.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-        }.authorizeHttpRequests { auth ->  // } 뒤에 바로 .
+        }.authorizeHttpRequests { auth ->  // .method() right after }
             auth
                 .requestMatchers("/api/**")
                 .permitAll()
-        }.build()  // } 뒤에 바로 .
+        }.build()  // .method() right after }
 
-// ❌ 틀린 방식
+// ❌ Incorrect
 fun example(http: HttpSecurity): SecurityFilterChain =
-    http.csrf { it.disable() }  // http 뒤에 바로 .csrf 불가
+    http.csrf { it.disable() }  // .csrf right after http is not allowed
         .build()
 ```
 
-**규칙:**
-- 변수/파라미터 다음에는 **줄바꿈 후** `.메서드()`
-- 닫는 중괄호 `}` 다음에는 **바로** `.메서드()` (줄바꿈 없음)
+**Rules:**
+- After a variable/parameter, **break the line** before `.method()`
+- After a closing brace `}`, chain `.method()` **immediately** (no line break)
 
-### 2. 함수 표현식 (function-expression-body)
+### 2. Function expression body
 ```kotlin
-// ✅ 단일 표현식은 = 사용
+// ✅ Use = for single expressions
 fun handleException(e: Exception): ResponseEntity<Map<String, Any>> =
     ResponseEntity
         .status(HttpStatus.INTERNAL_SERVER_ERROR)
         .body(mapOf("error" to e.message))
 
-// ❌ 불필요한 return 사용
+// ❌ Unnecessary use of return
 fun handleException(e: Exception): ResponseEntity<Map<String, Any>> {
     return ResponseEntity
         .status(HttpStatus.INTERNAL_SERVER_ERROR)
@@ -48,33 +48,33 @@ fun handleException(e: Exception): ResponseEntity<Map<String, Any>> {
 }
 ```
 
-### 3. 로컬에서 Ktlint 실행
+### 3. Running Ktlint locally
 ```bash
-# 체크
+# Check
 ./gradlew ktlintCheck
 
-# 자동 포맷
+# Auto-format
 ./gradlew ktlintFormat
 ```
 
-## 커밋 메시지
+## Commit messages
 ```
-fix: 이슈 설명 (#이슈번호)
-feat: 새 기능 (#이슈번호)
-refactor: 리팩토링
-docs: 문서
-test: 테스트
+fix: issue description (#issue-number)
+feat: new feature (#issue-number)
+refactor: refactoring
+docs: documentation
+test: tests
 ```
 
-## PR 규칙
-- 제목: `fix: 설명` 또는 `feat: 설명`
-- 본문: `Closes #이슈번호` 포함
-- CI 통과 필수
+## PR rules
+- Title: `fix: description` or `feat: description`
+- Body: include `Closes #issue-number`
+- CI must pass
 
-## 테스트
-- PR 전 로컬 테스트 실행: `./gradlew test`
-- 새 기능에는 테스트 추가 권장
+## Testing
+- Run local tests before a PR: `./gradlew test`
+- New features should include tests
 
-## 배포
-- 로컬 검증 → `v*` 태그 push → production 자동 배포 (sandbox 없음)
-- 로컬 검증 명령은 `INFRASTRUCTURE.md` 참고
+## Deployment
+- Local verification → push a `v*` tag → auto-deploy to production (no sandbox)
+- See `INFRASTRUCTURE.md` for local verification commands

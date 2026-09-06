@@ -1,85 +1,84 @@
 # Changelog
 
-잔고(Jango) 가계부 서비스의 주요 변경 사항.
+Notable changes to the Jango (잔고) bookkeeping service.
 
-형식은 [Keep a Changelog](https://keepachangelog.com/) 를 따르고, 버전은 [SemVer](https://semver.org/) 를 따릅니다.
+Format follows [Keep a Changelog](https://keepachangelog.com/); versioning follows [SemVer](https://semver.org/).
 
 ## Unreleased
 
 ## 0.5.3 - 2026-06-05
 
 ### Fixed
-- **NetWorthTab breakdown 표 트리 평탄화** (#815). v0.5.2 (#813) AssetAllocationChart fix 의 후속. 카테고리 종류·세부분류별 잔액 표도 동일한 트리 평탄화 패턴이 누락돼 자식 카테고리의 subtype 이 표에 반영되지 않던 문제. `flattenAccounts + !isGroup` 패턴 적용.
+- **Flattened the NetWorthTab breakdown table tree** (#815). Follow-up to the v0.5.2 AssetAllocationChart fix (#813). The same tree-flattening pattern was missing from the category/subtype balance table, so subtypes set on child categories weren't reflected in the table. Applied the `flattenAccounts + !isGroup` pattern.
 
 ## 0.5.2 - 2026-06-05
 
 ### Fixed
-- **자산 배분 도넛: 세부분류 100% 기타 버그** (#813). API 트리 응답을 평탄화하지 않아 자식 카테고리에 설정한 subtype 이 차트에 반영되지 않던 문제. `flattenAccounts` + `isGroup` 스킵 패턴(NetWorthWidget 과 동일)을 적용해 leaf 카테고리만 집계.
+- **Asset allocation donut: subtype showing 100% "Other" bug** (#813). The API's tree response wasn't flattened, so subtypes set on child categories weren't reflected in the chart. Applied the `flattenAccounts` + skip-`isGroup` pattern (same as NetWorthWidget) to aggregate leaf categories only.
 
 ### Added
-- **subtype 자동 추정** — 카테고리 이름에서 키워드 매칭으로 추정 (현금/은행/적금/주식 등).
-- **진단 hint** — 자산 중 OTHER 비율 ≥ 50% 면 "카테고리 관리에서 종류 설정하기 →" 링크 노출.
-- **ASSET subtype 옵션 확장** — Accounts 페이지에 CASH(현금) + OTHER(기타) 추가.
+- **Automatic subtype inference** — inferred from keyword matches in the category name (cash, bank, savings, stock, etc.).
+- **Diagnostic hint** — shows a "Set type in category management →" link when ≥50% of assets are OTHER.
+- **Expanded ASSET subtype options** — added CASH and OTHER to the Accounts page.
 
 ## 0.5.1 - 2026-06-05
 
 ### Changed
-- **Dashboard ↔ Reports 역할 명확화** — 두 영역 간 중복 해소를 위해 UI 가이드 + cross-link 추가 (#811).
-  - Dashboard 부제: _"한눈에 보기 — 오늘·이번 달"_ + Reports 진입 링크 (📋 자세한 표).
-  - Reports 부제: _"회계 리포트 — 기간 선택 · 세부 분석 · CSV 다운로드"_ + Dashboard 진입 링크 (📊 차트).
+- **Clarified Dashboard vs. Reports roles** — added UI guidance + cross-links to resolve overlap between the two areas (#811).
+  - Dashboard subtitle: _"At a glance — today & this month"_ + link to Reports (📋 detailed tables).
+  - Reports subtitle: _"Accounting reports — date range · detailed breakdown · CSV download"_ + link to Dashboard (📊 charts).
 
 ### Added
-- **CSV 다운로드** — Reports 의 IncomeExpense / BalanceSheet 에서 화면 데이터를 CSV 로 즉시 내보내기. 한글 Excel 호환(UTF-8 BOM). CashFlow / CreditCard 는 follow-up.
-- `jango-web/src/utils/csvExport.ts` 신규 — RFC 4180 호환 직렬화 + Blob 다운로드 트리거 (테스트 12 케이스).
+- **CSV download** — instantly export on-screen data as CSV from the IncomeExpense / BalanceSheet reports. Compatible with Korean text in Excel (UTF-8 BOM). CashFlow / CreditCard planned as follow-ups.
+- New `jango-web/src/utils/csvExport.ts` — RFC 4180-compliant serialization + Blob download trigger (12 test cases).
 
 ## 0.5.0 - 2026-06-05 — _The visibility release_
 
-v0.5 마일스톤 **7/10 closed**. 사용자가 자신의 자산 흐름을 한눈에 볼 수 있도록 시각화·자동 분석 일체를 추가.
+**7 of 10 v0.5 milestone issues closed.** Added a full suite of visualizations and automated analysis so users can see their asset flow at a glance.
 
 ### Added
-- **NetWorth 미니 위젯** — 모든 페이지 상단 always-on. 순자산 + 전월 대비 ▲▼ delta (#792 / PR #805).
-- **Asset Allocation 도넛 차트** — Account Type (ASSET / LIABILITY / EQUITY) + ASSET subtype 별 비중 (#786 / PR #800).
-- **NetWorth 시계열 차트** — 12개월 line chart (#785 Phase 1 / PR #802).
-- **월별 수입/지출 흐름 + 누적 저축률** — Recharts ComposedChart (bar + line) (#787 Phase 1 / PR #803).
-- **카테고리 지출 트렌드** — Top 10 expense account 12개월 변화 line chart (#788 / PR #806).
-- **인사이트 카드** — "이번 달 식비 +18% / 최대 단일 지출 / 저축률 상승 / N개월 연속 감소" 5종 자동 분석 (#789 / PR #809).
-- **Dashboard 탭 구조** — Overview / Net Worth / Cash Flow / Categories 4탭 + URL persistence (`?tab=...`) + 모바일 반응형 (#791 / PR #807).
-- **NetWorthService API** — 시계열 스냅샷 + 2-query 최적화 (#784 / PR #799).
+- **NetWorth mini widget** — always-on, shown at the top of every page. Net worth + month-over-month ▲▼ delta (#792 / PR #805).
+- **Asset allocation donut chart** — breakdown by account type (ASSET / LIABILITY / EQUITY) and ASSET subtype (#786 / PR #800).
+- **NetWorth time-series chart** — 12-month line chart (#785 Phase 1 / PR #802).
+- **Monthly income/expense flow + cumulative savings rate** — Recharts ComposedChart (bar + line) (#787 Phase 1 / PR #803).
+- **Category spending trend** — 12-month line chart of the top 10 expense accounts (#788 / PR #806).
+- **Insight cards** — 5 automated insights: "food spending +18% this month / largest single expense / savings rate rising / N consecutive months of decline" (#789 / PR #809).
+- **Dashboard tab structure** — 4 tabs (Overview / Net Worth / Cash Flow / Categories) + URL persistence (`?tab=...`) + mobile-responsive (#791 / PR #807).
+- **NetWorthService API** — time-series snapshots + 2-query optimization (#784 / PR #799).
 
 ### Backend
-- **ADR 0001** — Recharts v3 차트 라이브러리 채택 결정 문서화 (#790 / PR #798).
+- **ADR 0001** — documented the decision to adopt the Recharts v3 charting library (#790 / PR #798).
 
 ### SEO / AEO
-- **JSON-LD 구조화 데이터 3종** — SoftwareApplication / WebSite / **FAQPage** (Google AI Overview · Perplexity 직접 인용 대비) (PR #804).
-- **`/llms.txt` + `/llms-full.txt`** — AI 응답 엔진(ChatGPT · Claude · Perplexity) 친화적 요약.
-- **AI 크롤러 명시 허용** — `robots.txt` 에 GPTBot / ClaudeBot / PerplexityBot / Google-Extended / Naver Yeti 등 16종.
-- **Open Graph 확장** — `og:locale=ko_KR` + alternates (en/ja) + image width/height/alt.
-- **페이지별 SEO** — `usePageSEO` 훅으로 Login / Help / Privacy / Terms 4개 public 페이지 메타 동기화.
-- **`docs/decisions/`** — ADR 디렉터리 신설 (Architectural Decision Records).
+- **3 JSON-LD structured data types** — SoftwareApplication / WebSite / **FAQPage** (for Google AI Overview and Perplexity direct citation).
+- **`/llms.txt` + `/llms-full.txt`** — summaries tailored for AI answer engines (ChatGPT, Claude, Perplexity).
+- **Explicit AI crawler allowances** — 16 crawlers (GPTBot, ClaudeBot, PerplexityBot, Google-Extended, Naver Yeti, etc.) allowed in `robots.txt`.
+- **Extended Open Graph** — `og:locale=ko_KR` + alternates (en/ja) + image width/height/alt.
+- **Per-page SEO** — `usePageSEO` hook syncing meta tags for 4 public pages (Login / Help / Privacy / Terms).
+- **`docs/decisions/`** — new ADR (Architectural Decision Records) directory.
 
 ### Tests
-- 신규 vitest +60건 누적 (NetWorth widget · CategoryTrend · InsightCards · Dashboard tabs · 헬퍼 함수).
-- 백엔드 신규 JUnit/Mockito 테스트 +20건 누적 (NetWorthService · InsightsService · ReportService category-trend).
+- 60+ new vitest tests (NetWorth widget · CategoryTrend · InsightCards · Dashboard tabs · helper functions).
+- 20+ new backend JUnit/Mockito tests (NetWorthService · InsightsService · ReportService category-trend).
 
 ## 0.4.3 - 2026-06-02
 
 ### Added
-- 후잉 가계부 마이그레이션 매핑 가이드 강화 (Help 페이지).
+- Strengthened the Whooing (후잉) ledger migration mapping guide (Help page).
 
 ### Changed
-- `BudgetService` Spring Transactional import 정합성 (`org.springframework.transaction.annotation`).
-- `IncomeExpense` · `BalanceSheet` 리포트 페이지 — API 실패 시 toast 알림 + Sentry 라우팅.
+- Fixed `BudgetService` Spring `@Transactional` import consistency (`org.springframework.transaction.annotation`).
+- `IncomeExpense` / `BalanceSheet` report pages — added a toast notification + Sentry routing on API failure.
 
 ### Tests
-- `amountExpression.ts` 단위 테스트 29건.
-- `dateFormat.ts` 단위 테스트 26건.
-- `TransactionService.getTransactionsPaginated` KDoc 68줄.
+- 29 unit tests for `amountExpression.ts`.
+- 26 unit tests for `dateFormat.ts`.
+- 68 lines of KDoc for `TransactionService.getTransactionsPaginated`.
 
-## 0.4.0 - 2026-05-30 이전
+## 0.4.0 - 2026-05-30 and earlier
 
-- 가계부 기본 기능 (거래 입력 · 카테고리 · 보고서 · 예산 · 캘린더).
-- Google OAuth 로그인.
-- CSV 가져오기 / 내보내기.
-- 다국어 (한국어 / 영어 / 일본어).
-- PWA (홈 화면 추가).
-
+- Core bookkeeping features (transaction entry · categories · reports · budgets · calendar).
+- Google OAuth login.
+- CSV import / export.
+- Multi-language support (Korean / English / Japanese).
+- PWA (add to home screen).
